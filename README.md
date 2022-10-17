@@ -97,6 +97,12 @@ yarn test:unit  # runs normal jest unit tests
 yarn test:e2e   # runs e2e tests
 ```
 
+## Appreciations in monetary form are welcome at:
+
+`zeRealSchlausKwab@stacker.news`
+
+![zeRealSchlausKwab@stacker.news](./public/img.png)
+
 ---
 
 Created by [@SchlausKwab](https://twitter.com/SchlausKwab), [zeRealSchlausKwab](https://t.me/zeRealSchlausKwab). 
