@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+
+  previewFeatures = ["fullTextSearch", "fullTextIndex", "interactiveTransactions"]
+}
+
+model User {
+  id           String        @id @default(uuid())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  lastLogin    DateTime?
+  publicKey    String        @unique
+  userName     String        @unique
+  profileImage String?
+  bio          String?
+  transaction  Transaction[]
+}
+
+model UserAuth {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  k1Hash    String   @unique
+  publicKey String?
+}
+
+model Transaction {
+  id                String            @id @default(uuid())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  confirmedAt       DateTime?
+  maxAgeSeconds     Int
+  description       String
+  transactionKind   TransactionKind
+  transactionStatus TransactionStatus
+  hash              String            @unique
+  bolt11            String
+  lndId             String            @unique
+  k1Hash            String?           @unique
+  mSatsTarget       Int
+  mSatsSettled      Int?
+  user              User?             @relation(fields: [userId], references: [id])
+  userId            String?
+}
+
+enum TransactionKind {
+  INVOICE
+  WITHDRAWAL
+  TRANSFER
+}
+
+enum TransactionStatus {
+  SETTLED
+  PENDING
+  FAILED
+  CANCELED
+  EXPIRED
+}

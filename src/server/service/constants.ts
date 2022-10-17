@@ -1,0 +1,5 @@
+export const SINGLE_TRANSACTION_CAP = 100
+export const PER_USER_BALANCE_CAP = 1000
+export const TRANSACTION_FREQUENCY_SECONDS_LIMIT = 60 * 3
+export const TRANSACTION_MAX_AGE = 60 * 60
+export const INVOICE_LIMIT = 10
