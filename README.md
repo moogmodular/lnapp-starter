@@ -1,6 +1,9 @@
 # Next.js - tRPC - LN App starter
 
-Convenient starter for Lightning Network driven web apps. This starter is based on [@alexdotjs](https://twitter.com/alexdotjs)'s tRPC [starter project](https://github.com/trpc/examples-next-prisma-starter).
+Convenient starter for Lightning Network driven web apps. This starter is based on [@alexdotjs](https://twitter.com/alexdotjs)'s tRPC [starter project](https://github.com/trpc/examples-next-prisma-starter). Since the inception of the **lightning network** and the development of the [ln-url](https://github.com/fiatjaf/lnurl-rfc) standard, the holy grail of **"bank as a web app"** is not only a reality but only 5 minutes of set up time and about 30$ of hosting costs away. This starter implements such an app. Authentication and Users are already there, and basic in- and out flow of purchasing power is taken care of. Users can **authenticate themselves**, **deposit** and **withdraw** up to **1000 sats**. Whatever happens in between is up to the developer.
+
+Happy Hacking!
+
 
 ![The King](./public/the_one_and_only_king.jpg)
 
@@ -96,4 +99,4 @@ yarn test:e2e   # runs e2e tests
 
 ---
 
-Created by [@alexdotjs](https://twitter.com/alexdotjs).
+Created by [@SchlausKwab](https://twitter.com/SchlausKwab), [zeRealSchlausKwab](https://t.me/zeRealSchlausKwab). 

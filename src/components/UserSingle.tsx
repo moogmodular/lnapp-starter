@@ -50,7 +50,6 @@ export const UserSingle = ({ user }: UserSingleProps) => {
                     <div className={'flex flex-col'}>
                         <DateValue property={'created at:'} value={user.createdAt} />
                         <DateValue property={'updated at:'} value={user.updatedAt} />
-                        <DateValue property={'last login at:'} value={user.lastLogin ?? null} />
                     </div>
                     <div className={'flex w-1/3 flex-col'}>
                         <b>bio:</b>
