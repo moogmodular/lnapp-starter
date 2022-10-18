@@ -2,6 +2,7 @@
     "name": "lnapp-starter",
     "version": "0.0.1",
     "private": true,
+    "license": "MIT",
     "scripts": {
         "build:1-migrate": "prisma migrate deploy",
         "build:2-build": "next build",
