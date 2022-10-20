@@ -68,9 +68,9 @@ export const withdrawalRouter = t.router({
                             tag: 'withdrawRequest',
                             callback: `${process.env.LN_WITH_DO_URL}`,
                             k1: k1,
-                            defaultDescription: `Withdrawal for @${user?.userName} on noteblitz.app for maximum ${
-                                maxAmount - 1
-                            }`,
+                            defaultDescription: `Withdrawal for @${user?.userName} on ${
+                                process.env.DOMAIN
+                            } for maximum ${maxAmount - 1}`,
                             minWithdrawable: 10,
                             maxWithdrawable: cappedAmount * 1000 - 1000,
                         }

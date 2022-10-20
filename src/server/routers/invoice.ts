@@ -33,7 +33,7 @@ export const invoiceRouter = t.router({
             }
 
             const expiresAt = add(new Date(), { minutes: 60 })
-            const description = `${input.amount} sats for @${ctx.user.userName} on generic.app at ${format(
+            const description = `${input.amount} sats for @${ctx.user.userName} on ${process.env.DOMAIN} at ${format(
                 new Date(),
                 'dd.MM.yyyy hh:mm:ss',
             )}`
