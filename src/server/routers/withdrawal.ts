@@ -12,7 +12,8 @@ import { isAuthed } from '~/server/middlewares/authed'
 export const withdrawalRouter = t.router({
     getWithdrawalUrl: t.procedure.use(isAuthed).query(async ({ ctx }) => {
         const secret = k1()
-        const maxAmount = await userBalance(prisma, ctx?.user?.id)
+        const currentBalance = await userBalance(prisma, ctx.user.id)
+        const maxAmount = Math.min(currentBalance, SINGLE_TRANSACTION_CAP)
 
         const encoded = encodedUrl(`${process.env.LN_WITH_CREATE_URL}`, 'withdrawRequest', secret)
 
@@ -35,25 +36,6 @@ export const withdrawalRouter = t.router({
 
         return { secret, encoded }
     }),
-    wasWithdrawalSettled: t.procedure
-        .use(isAuthed)
-        .input(
-            z.object({
-                k1: z.string(),
-            }),
-        )
-        .query(async ({ ctx, input }) => {
-            const lnWithdrawal = await prisma.transaction.findUnique({
-                where: { k1Hash: getK1Hash(input.k1) },
-                select: { transactionStatus: true },
-            })
-
-            if (!lnWithdrawal) {
-                return { transactionStatus: 'CREATION_PENDING' }
-            } else {
-                return { transactionStatus: lnWithdrawal.transactionStatus }
-            }
-        }),
     createWithdrawal: t.procedure
         .meta({ openapi: { method: 'GET', path: '/create-withdrawal' } })
         .input(
@@ -178,10 +160,30 @@ export const withdrawalRouter = t.router({
                         transactionStatus: 'SETTLED',
                         mSatsTarget: parseInt(payment.mtokens),
                         mSatsSettled: parseInt(payment.mtokens) - parseInt(payment.fee_mtokens),
+                        confirmedAt: new Date(),
                     },
                 })
             })
 
             return { status: 'OK' }
+        }),
+    wasWithdrawalSettled: t.procedure
+        .use(isAuthed)
+        .input(
+            z.object({
+                k1: z.string(),
+            }),
+        )
+        .query(async ({ ctx, input }) => {
+            const lnWithdrawal = await prisma.transaction.findUnique({
+                where: { k1Hash: getK1Hash(input.k1) },
+                select: { transactionStatus: true },
+            })
+
+            if (!lnWithdrawal) {
+                return { transactionStatus: 'CREATION_PENDING' }
+            } else {
+                return { transactionStatus: lnWithdrawal.transactionStatus }
+            }
         }),
 })
