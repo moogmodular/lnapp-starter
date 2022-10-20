@@ -10,12 +10,15 @@ export const userBalance = async (prisma: PrismaClient, userId: string) => {
 
     return (
         user?.transaction.reduce((acc, cur) => {
-            const transactionValue = {
-                INVOICE: cur.mSatsTarget,
-                WITHDRAWAL: -cur.mSatsTarget,
-                TRANSFER: cur.mSatsTarget,
-            }[cur.transactionKind]
-            return acc + transactionValue / 1000
+            if (cur.mSatsSettled) {
+                const transactionValue = {
+                    INVOICE: cur.mSatsSettled,
+                    WITHDRAWAL: -cur.mSatsSettled,
+                    TRANSFER: cur.mSatsSettled,
+                }[cur.transactionKind]
+                return acc + transactionValue / 1000
+            }
+            return acc
         }, 0) ?? 0
     )
 }
