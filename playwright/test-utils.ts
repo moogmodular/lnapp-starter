@@ -2,7 +2,7 @@ import { getParams, LNURLAuthParams } from 'js-lnurl'
 import { signMessageWithWallet } from '~/utils/wallet'
 import { APIRequestContext, Page } from '@playwright/test'
 
-export const getSigAndKey = (cb: LNURLAuthParams, privateKey: string) => {
+export const getSigAndKey = (cb: { k1: string }, privateKey: string) => {
     const { publicKey, exportedSignature } = signMessageWithWallet(cb.k1, privateKey)
     const sig = Buffer.from(exportedSignature).toString('hex')
     const key = Buffer.from(publicKey).toString('hex')
