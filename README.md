@@ -99,7 +99,7 @@ yarn test:unit  # runs normal jest unit tests
 yarn test:e2e   # runs e2e tests
 ```
 
-## Appreciations in monetary form are welcome at:
+---
 
 `zeRealSchlausKwab@stacker.news`
 
