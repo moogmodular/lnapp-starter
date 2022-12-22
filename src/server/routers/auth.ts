@@ -2,12 +2,12 @@ import { t } from '../trpc'
 import { encodedUrl, getK1Hash, k1 } from '~/server/service/lnurl'
 import { prisma } from '~/server/prisma'
 import { z } from 'zod'
-import { adjectives, animals, colors, Config, uniqueNamesGenerator } from 'unique-names-generator'
 import { TRPCError } from '@trpc/server'
 import secp256k1 from 'secp256k1'
 import jwt from 'jsonwebtoken'
 import { userBalance } from '~/server/service/accounting'
 import { sub } from 'date-fns'
+import { defaultUserData } from '~/server/service/user'
 import { isAuthed } from '~/server/middlewares/authed'
 
 export const authRouter = t.router({
@@ -55,7 +55,14 @@ export const authRouter = t.router({
                 if (userFromAuth?.publicKey) {
                     return await transactionPrisma.user.findUnique({
                         where: { publicKey: userFromAuth?.publicKey },
-                        select: { id: true, publicKey: true, createdAt: true, updatedAt: true, userName: true },
+                        select: {
+                            id: true,
+                            publicKey: true,
+                            createdAt: true,
+                            updatedAt: true,
+                            userName: true,
+                            lastLogin: true,
+                        },
                     })
                 }
 
@@ -69,7 +76,7 @@ export const authRouter = t.router({
             await prisma.userAuth.deleteMany({
                 where: { OR: [{ k1Hash }, { createdAt: { lt: sub(new Date(), { seconds: 90 }) } }] },
             })
-            return { user: jwt.sign({ ...user }, process.env.JWT_SECRET ?? '') }
+            return { user: jwt.sign({ ...user }, process.env.JWT_SECRET ?? ''), lastLogin: user.lastLogin }
         }),
     authenticate: t.procedure
         .meta({ openapi: { method: 'GET', path: '/authenticate' } })
@@ -104,18 +111,7 @@ export const authRouter = t.router({
                         })
 
                         if (!innerUser) {
-                            const customConfig: Config = {
-                                dictionaries: [adjectives, colors, animals],
-                                separator: '',
-                                length: 3,
-                                style: 'capital',
-                            }
-                            const randomName: string = uniqueNamesGenerator(customConfig)
-
-                            const response = await fetch('https://picsum.photos/250')
-                            const image = await fetch(response.url)
-                                .then((r) => r.arrayBuffer())
-                                .then((b) => Buffer.from(b).toString('base64'))
+                            const { randomName, image } = await defaultUserData()
 
                             innerUser = await transactionPrisma.user.create({
                                 data: {
@@ -123,6 +119,11 @@ export const authRouter = t.router({
                                     publicKey: input.key,
                                     profileImage: `data:image/png;base64,${image}`,
                                 },
+                            })
+                        } else {
+                            await transactionPrisma.user.update({
+                                where: { id: innerUser.id },
+                                data: { lastLogin: new Date() },
                             })
                         }
 

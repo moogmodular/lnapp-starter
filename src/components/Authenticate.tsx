@@ -7,7 +7,11 @@ import { PollingQRCode } from '~/components/PollingQRCode'
 
 type LoginUrlResponse = inferProcedureOutput<AppRouter['auth']['loginUrl']>
 
-export const Authenticate = ({}) => {
+interface AuthenticateProps {
+    openWelcomeDialog: () => void
+}
+
+export const Authenticate = ({ openWelcomeDialog }: AuthenticateProps) => {
     const utils = trpc.useContext()
     const { storeToken, storeLogin } = useAuthStore()
 
@@ -25,6 +29,11 @@ export const Authenticate = ({}) => {
                         return 1000
                     }
                     storeLogin(data.user)
+                    if (!data?.lastLogin) {
+                        setTimeout(() => {
+                            openWelcomeDialog()
+                        }, 1000)
+                    }
                     return false
                 }
                 return false

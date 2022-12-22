@@ -9,10 +9,11 @@ import { UserList } from '~/components/UserList'
 import { Footer } from '~/components/Footer'
 import { InteractionModal } from '~/components/InteractionModal'
 import { EditUser } from '~/components/EditUser'
+import { WelcomeScreen } from '~/components/WelcomeScreen'
 
 const IndexPage: NextPageWithLayout = () => {
     const { user, setUser, storeToken, storeLogin } = useAuthStore()
-    const [modal, setModal] = useState<'none' | 'authenticate' | 'transact' | 'editUser'>('none')
+    const [modal, setModal] = useState<'none' | 'authenticate' | 'transact' | 'editUser' | 'welcome'>('none')
 
     const utils = trpc.useContext()
 
@@ -47,7 +48,7 @@ const IndexPage: NextPageWithLayout = () => {
                         {
                             authenticate: (
                                 <InteractionModal title={'Authenticate'} close={() => setModal('none')}>
-                                    <Authenticate />
+                                    <Authenticate openWelcomeDialog={() => setModal('welcome')} />
                                 </InteractionModal>
                             ),
                             transact: (
@@ -58,6 +59,11 @@ const IndexPage: NextPageWithLayout = () => {
                             editUser: (
                                 <InteractionModal title={'Edit User'} close={() => setModal('none')}>
                                     <EditUser close={() => setModal('none')} />
+                                </InteractionModal>
+                            ),
+                            welcome: (
+                                <InteractionModal title={'Welcome!'} close={() => setModal('none')}>
+                                    <WelcomeScreen close={() => setModal('none')} />
                                 </InteractionModal>
                             ),
                             none: null,
