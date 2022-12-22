@@ -51,7 +51,6 @@ export const invoiceRouter = t.router({
                     tokens:
                         balance + input.amount > PER_USER_BALANCE_CAP ? PER_USER_BALANCE_CAP - balance : input.amount,
                     description: description,
-                    description_hash: descriptionHash,
                     expires_at: expiresAt.toString(),
                 })
 
