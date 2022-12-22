@@ -5,8 +5,11 @@ import { INVOICE_LIMIT, TRANSACTION_FREQUENCY_SECONDS_LIMIT, TRANSACTION_MAX_AGE
 export const userBalance = async (prisma: PrismaClient, userId: string) => {
     const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: { transaction: { where: { transactionStatus: 'SETTLED' } } },
+        include: { transaction: { where: { transactionStatus: 'SETTLED' } }, userTipped: true, userTipsReceived: true },
     })
+
+    const sumTipped = user?.userTipped.reduce((acc, cur) => acc + cur.amount, 0) || 0
+    const sumReceived = user?.userTipsReceived.reduce((acc, cur) => acc + cur.amount, 0) || 0
 
     return (
         user?.transaction.reduce((acc, cur) => {
@@ -19,7 +22,7 @@ export const userBalance = async (prisma: PrismaClient, userId: string) => {
                 return acc + transactionValue / 1000
             }
             return acc
-        }, 0) ?? 0
+        }, sumReceived - sumTipped) ?? 0
     )
 }
 

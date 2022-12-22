@@ -13,15 +13,17 @@ generator client {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  lastLogin    DateTime?
-  publicKey    String        @unique
-  userName     String        @unique
-  profileImage String?
-  bio          String?
-  transaction  Transaction[]
+  id               String        @id @default(uuid())
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  lastLogin        DateTime?
+  publicKey        String        @unique
+  userName         String        @unique
+  profileImage     String?
+  bio              String?
+  transaction      Transaction[]
+  userTipped       Tip[]         @relation("tipForTipper")
+  userTipsReceived Tip[]         @relation("tipForTippee")
 }
 
 model UserAuth {
@@ -30,6 +32,16 @@ model UserAuth {
   updatedAt DateTime @updatedAt
   k1Hash    String   @unique
   publicKey String?
+}
+
+model Tip {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  amount    Int
+  tipper    User     @relation(name: "tipForTipper", fields: [tipperId], references: [id])
+  tipperId  String
+  tippee    User     @relation(name: "tipForTippee", fields: [tippeeId], references: [id])
+  tippeeId  String
 }
 
 model Transaction {

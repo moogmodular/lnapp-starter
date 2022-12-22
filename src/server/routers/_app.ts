@@ -7,6 +7,7 @@ import { nodeUtilsRouter } from '~/server/routers/nodeUtils'
 import { accountingRouter } from '~/server/routers/accounting'
 import { userRouter } from '~/server/routers/user'
 import { walletRouter } from '~/server/routers/wallet'
+import { tipRouter } from '~/server/routers/tips'
 
 export const appRouter = t.router({
     auth: authRouter,
@@ -17,6 +18,7 @@ export const appRouter = t.router({
     nodeUtils: nodeUtilsRouter,
     accounting: accountingRouter,
     wallet: walletRouter,
+    tip: tipRouter,
 })
 
 export type AppRouter = typeof appRouter
