@@ -25,7 +25,12 @@ export const userRouter = t.router({
             return await prisma.user
                 .update({
                     where: { id: ctx.user.id },
-                    data: { userName: input.userName, profileImage: input.base64EncodedImage, bio: input.bio },
+                    data: {
+                        userName: input.userName,
+                        profileImage: input.base64EncodedImage,
+                        bio: input.bio,
+                        nostrPubKey: input.nostrPubKey,
+                    },
                 })
                 .catch((error) => {
                     console.log(error)

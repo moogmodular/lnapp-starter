@@ -19,6 +19,7 @@ model User {
   lastLogin        DateTime?
   publicKey        String        @unique
   userName         String        @unique
+  nostrPubKey      String?       @unique
   profileImage     String?
   bio              String?
   transaction      Transaction[]
@@ -38,9 +39,9 @@ model Tip {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   amount    Int
-  tipper    User     @relation(name: "tipForTipper", fields: [tipperId], references: [id])
+  tipper    User     @relation(name: "tipForTipper", fields: [tipperId], references: [id], onDelete: Cascade)
   tipperId  String
-  tippee    User     @relation(name: "tipForTippee", fields: [tippeeId], references: [id])
+  tippee    User     @relation(name: "tipForTippee", fields: [tippeeId], references: [id], onDelete: Cascade)
   tippeeId  String
 }
 

@@ -9,6 +9,7 @@ export interface TokenUser {
     createdAt: string
     updatedAt: string
     lastLogin: string
+    nostrPubKey: string
 }
 
 interface CreateContextOptions {

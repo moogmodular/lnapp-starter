@@ -64,39 +64,51 @@ export const UserSingle = ({ user }: UserSingleProps) => {
         <>
             <div
                 className={
-                    'my-2 flex flex-row rounded-tl-lg border-2 border-gray-400 p-3 text-sm transition duration-150 ease-in-out hover:-translate-y-1 hover:drop-shadow-lg'
+                    'my-2 flex flex-col gap-4 rounded-tl-lg border-2 border-gray-400 p-3 text-sm transition duration-150 ease-in-out hover:-translate-y-1 hover:drop-shadow-lg'
                 }
             >
-                <img
-                    className="mr-2 h-14 w-14"
-                    src={user.profileImage ?? 'https://picsum.photos/250'}
-                    alt={`profile image of ${user.userName}`}
-                />
-                <div className={'flex w-full flex-row gap-4'}>
-                    <div className={'flex w-1/3 flex-col'}>
-                        <div>{user.id}</div>
-                        <div>@{user.userName}</div>
-                        <div className={'break-all'}>
-                            <PublicKeyDisplay publicKey={user.publicKey} />
-                        </div>
-                    </div>
+                <div className={'flex flex-row gap-4'}>
                     <div className={'flex flex-col'}>
-                        <DateValue property={'created at:'} value={user.createdAt} />
-                        <DateValue property={'updated at:'} value={user.updatedAt} />
+                        <div className={'flex flex-row'}>
+                            <b>Public Key:</b>
+                            <p>{user.publicKey}</p>
+                        </div>
+                        {user.nostrPubKey && (
+                            <div className={'flex flex-row'}>
+                                <b>Nostr:</b>
+                                <p>{user.nostrPubKey}</p>
+                            </div>
+                        )}
                     </div>
                     <div className={'flex w-1/3 flex-col'}>
                         <b>bio:</b>
                         <p id={'user-bio-display'}>{user.bio}</p>
                     </div>
                 </div>
-                <div className={'flex flex-row gap-4'}>
-                    <div>
-                        <label htmlFor="tip-this-user">tip amount</label>
-                        <input
-                            id={'tip-this-user'}
-                            {...register('amount', { required: true, valueAsNumber: true })}
-                            type="text"
-                            className="
+                <div className={'flex flex-row'}>
+                    <img
+                        className="mr-2 h-14 w-14"
+                        src={user.profileImage ?? 'https://picsum.photos/250'}
+                        alt={`profile image of ${user.userName}`}
+                    />
+                    <div className={'flex w-full flex-row gap-4'}>
+                        <div className={'flex w-1/3 flex-col'}>
+                            <div>{user.id}</div>
+                            <div>@{user.userName}</div>
+                        </div>
+                        <div className={'flex flex-col'}>
+                            <DateValue property={'created at:'} value={user.createdAt} />
+                            <DateValue property={'updated at:'} value={user.updatedAt} />
+                        </div>
+                    </div>
+                    <div className={'flex flex-row gap-4'}>
+                        <div>
+                            <label htmlFor="tip-this-user">tip amount</label>
+                            <input
+                                id={'tip-this-user'}
+                                {...register('amount', { required: true, valueAsNumber: true })}
+                                type="text"
+                                className="
           form-control
           m-0
           block
@@ -112,17 +124,18 @@ export const UserSingle = ({ user }: UserSingleProps) => {
           ease-in-out
           focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none
         "
-                        />
+                            />
+                        </div>
+                        <button
+                            className={
+                                'h-12 w-32 rounded-tr-lg border-2 border-gray-400 p-3 text-sm transition duration-150 ease-in-out hover:-translate-y-1 hover:drop-shadow-lg'
+                            }
+                            onClick={() => handleCreateTip()}
+                            disabled={watch('amount') < 1 || watch('amount') > 100}
+                        >
+                            Tip user
+                        </button>
                     </div>
-                    <button
-                        className={
-                            'h-12 w-32 rounded-tr-lg border-2 border-gray-400 p-3 text-sm transition duration-150 ease-in-out hover:-translate-y-1 hover:drop-shadow-lg'
-                        }
-                        onClick={() => handleCreateTip()}
-                        disabled={watch('amount') < 1 || watch('amount') > 100}
-                    >
-                        Tip user
-                    </button>
                 </div>
             </div>
         </>
