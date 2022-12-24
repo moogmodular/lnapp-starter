@@ -4,6 +4,7 @@ import { userBalance } from '~/server/service/accounting'
 import { prisma } from '~/server/prisma'
 import { TRPCError } from '@trpc/server'
 import { createTipForUser } from '~/components/UserSingle'
+import { sendDMToUser } from '~/server/service/nostr'
 
 export const tipRouter = t.router({
     creteTipForUser: t.procedure
@@ -32,6 +33,13 @@ export const tipRouter = t.router({
                     tippee: { connect: { id: targetUser.id } },
                 },
             })
+
+            if (targetUser.nostrPubKey) {
+                void sendDMToUser(
+                    targetUser.nostrPubKey,
+                    `@${targetUser.userName}. You have received a tip of ${input.amount} on ${process.env.DOMAIN}.`,
+                )
+            }
 
             return { status: 'OK' }
         }),

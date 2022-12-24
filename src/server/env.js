@@ -18,6 +18,9 @@ const envSchema = z.object({
     LN_AUTH_URL: z.string().url(),
     LN_WITH_CREATE_URL: z.string().url(),
     NODE_ENV: z.enum(['development', 'test', 'production']),
+    NOSTR_RELAY_POOL: z.string(),
+    WEBSITE_NOTIFICATION_RECIPIENT_NOSTR_PUBLIC_KEY: z.string().length(64),
+    WEBSITE_PRIVATE_NOSTR_KEY: z.string().length(64),
 })
 
 const env = envSchema.safeParse(process.env)

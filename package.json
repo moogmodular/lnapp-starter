@@ -39,6 +39,7 @@
     "dependencies": {
         "@formkit/auto-animate": "^1.0.0-beta.3",
         "@hookform/resolvers": "^2.9.9",
+        "@noble/secp256k1": "^1.7.0",
         "@prisma/client": "^4.5.0",
         "@tanstack/react-query": "^4.12.0",
         "@trpc/client": "^10.0.0-proxy-beta.21",
@@ -51,6 +52,7 @@
         "lightning": "^6.2.3",
         "next": "^12.3.1",
         "nextjs-cors": "^2.1.1",
+        "nostr-tools": "^1.0.0",
         "qrcode.react": "^3.1.0",
         "react": "^18.1.0",
         "react-dom": "^18.1.0",
@@ -63,6 +65,7 @@
         "trpc-openapi": "^1.0.0-alpha.3",
         "unique-names-generator": "^4.7.1",
         "webln": "^0.3.0",
+        "websocket-polyfill": "^0.0.3",
         "zod": "^3.19.1",
         "zustand": "^4.1.2"
     },

@@ -6,9 +6,12 @@ import { TRPCError } from '@trpc/server'
 import secp256k1 from 'secp256k1'
 import jwt from 'jsonwebtoken'
 import { userBalance } from '~/server/service/accounting'
-import { sub } from 'date-fns'
+import { format, sub } from 'date-fns'
 import { defaultUserData } from '~/server/service/user'
 import { isAuthed } from '~/server/middlewares/authed'
+import { sendDMToWebsiteAccount } from '~/server/service/nostr'
+import * as process from 'process'
+import { standardDateFormat } from '~/utils/date'
 
 export const authRouter = t.router({
     getMe: t.procedure.use(isAuthed).query(async ({ ctx }) => {
@@ -87,61 +90,59 @@ export const authRouter = t.router({
                 key: z.string().length(66, { message: 'Invalid public key length' }),
             }),
         )
-        .output(z.any())
+        .output(z.object({ status: z.enum(['OK', 'ERROR']), reason: z.string().optional() }))
         .query(async ({ input }) => {
-            try {
-                const sig = Buffer.from(input.sig, 'hex')
-                const k1 = Buffer.from(input.k1, 'hex')
-                const key = Buffer.from(input.key, 'hex')
-                const signature = secp256k1.signatureImport(sig)
-                const k1Hash = getK1Hash(input.k1)
-                const userAuth = await prisma.userAuth.findFirst({ where: { AND: [{ k1Hash }, { publicKey: null }] } })
+            const sig = Buffer.from(input.sig, 'hex')
+            const k1 = Buffer.from(input.k1, 'hex')
+            const key = Buffer.from(input.key, 'hex')
+            const signature = secp256k1.signatureImport(sig)
+            const k1Hash = getK1Hash(input.k1)
+            const userAuth = await prisma.userAuth.findFirst({ where: { AND: [{ k1Hash }, { publicKey: null }] } })
 
-                if (!userAuth) {
-                    throw new TRPCError({ code: 'NOT_FOUND', message: 'No such secret.' })
-                }
-
-                if (secp256k1.ecdsaVerify(signature, k1, key)) {
-                    await prisma.$transaction(async (transactionPrisma) => {
-                        let innerUser
-                        innerUser = await transactionPrisma.user.findUnique({
-                            where: {
-                                publicKey: input.key,
-                            },
-                        })
-
-                        if (!innerUser) {
-                            const { randomName, image } = await defaultUserData()
-
-                            innerUser = await transactionPrisma.user.create({
-                                data: {
-                                    userName: randomName,
-                                    publicKey: input.key,
-                                    profileImage: `data:image/png;base64,${image}`,
-                                },
-                            })
-                        } else {
-                            await transactionPrisma.user.update({
-                                where: { id: innerUser.id },
-                                data: { lastLogin: new Date() },
-                            })
-                        }
-
-                        await transactionPrisma.userAuth.update({
-                            where: { k1Hash },
-                            data: { publicKey: input.key },
-                        })
-
-                        return { status: 'OK' }
-                    })
-                } else {
-                    console.log('Something went wrong')
-                    return { status: 'ERROR', reason: 'Something went wrong' }
-                }
-            } catch (error) {
-                console.log(error)
+            if (!userAuth) {
+                throw new TRPCError({ code: 'NOT_FOUND', message: 'No such secret.' })
             }
 
-            return new TRPCError({ code: 'BAD_REQUEST', message: 'Something went wrong' })
+            if (secp256k1.ecdsaVerify(signature, k1, key)) {
+                return await prisma.$transaction(async (transactionPrisma) => {
+                    let innerUser
+                    innerUser = await transactionPrisma.user.findUnique({
+                        where: {
+                            publicKey: input.key,
+                        },
+                    })
+
+                    if (!innerUser) {
+                        const { randomName, image } = await defaultUserData()
+
+                        innerUser = await transactionPrisma.user.create({
+                            data: {
+                                userName: randomName,
+                                publicKey: input.key,
+                                profileImage: `data:image/png;base64,${image}`,
+                            },
+                        })
+                        void sendDMToWebsiteAccount(
+                            `A new user called ${innerUser.userName} has been created on ${
+                                process.env.DOMAIN
+                            }. Creation time ${format(innerUser.createdAt, standardDateFormat)}`,
+                        )
+                    } else {
+                        await transactionPrisma.user.update({
+                            where: { id: innerUser.id },
+                            data: { lastLogin: new Date() },
+                        })
+                    }
+
+                    await transactionPrisma.userAuth.update({
+                        where: { k1Hash },
+                        data: { publicKey: input.key },
+                    })
+
+                    return { status: 'OK' }
+                })
+            } else {
+                return { status: 'ERROR', reason: 'Something went wrong' }
+            }
         }),
 })
