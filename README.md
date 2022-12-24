@@ -1,6 +1,6 @@
 # Next.js - tRPC - LN App starter
 
-Convenient starter for Lightning Network driven web apps. This starter is based on [@alexdotjs](https://twitter.com/alexdotjs)'s tRPC [starter project](https://github.com/trpc/examples-next-prisma-starter). Since the inception of the **lightning network** and the development of the [ln-url](https://github.com/fiatjaf/lnurl-rfc) standard, the holy grail of **"bank as a web app"** is not only a reality but only 5 minutes of set up time and about 30$ of hosting costs away. This starter implements such an app. Authentication and Users are already there, and basic in- and out flow of purchasing power is taken care of. Users can **authenticate themselves**, **deposit** and **withdraw** up to **1000 sats**. Whatever happens in between is up to the developer.
+Convenient starter for Lightning Network driven web apps. This starter is based on [@alexdotjs](https://twitter.com/alexdotjs)'s tRPC [starter project](https://github.com/trpc/examples-next-prisma-starter). Since the inception of the **lightning network** and the development of the [ln-url](https://github.com/fiatjaf/lnurl-rfc) standard, the holy grail of **"bank as a web app"** is not only a reality but only 5 minutes of set up time and about 30$ of hosting costs away. This starter implements such an app. Authentication and Users are already there, and basic in- and out flow of purchasing power is taken care of. Users can **authenticate themselves**, **deposit** and **withdraw** up to **1000 sats**. Basic accounting and inter user tipping has been added so can also tip each other sats. Whatever happens in between is up to the developer. Since the latest update basic [nostr](https://github.com/nostr-protocol/nostr) interaction has been added so that the website owner gets notified when a new account has been created and individual users can get a message to their nostr public key given that they provided one.
 
 Much of the backend lnd interaction was inspired by open source projects like [stacker.news](https://github.com/stackernews/stacker.news), [lightning-poker.com](https://github.com/igreshev/lightning-poker) and [ln-jukebox
 ](https://github.com/alexlwn123/ln-jukebox)
@@ -17,6 +17,7 @@ Happy Hacking!
 -   🫙 Database with [Prisma](https://www.prisma.io/)
 -   ⚡ lnd connection with [ln-service/lightning](https://github.com/alexbosworth/lightning)
 -   💻 [webln](https://webln.dev/) enabled
+-   🔭 notifications for website owner and users with the [nostr](https://github.com/nostr-protocol/nostr) protocol
 -   🪙 simple bloatless auth with [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 -   🏢 state management [zustand](https://github.com/pmndrs/zustand)
 -   🌬️ easy to use styling with [tailwind](https://tailwindcss.com/)
