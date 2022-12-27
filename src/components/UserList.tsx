@@ -2,12 +2,11 @@ import { trpc } from '~/utils/trpc'
 import { UserSingle } from '~/components/UserSingle'
 import { Spinner } from '~/components/Spinner'
 import autoAnimate from '@formkit/auto-animate'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 export const UserList = ({}) => {
-    const { data: userListData, isLoading: userListIsLoading } = trpc.user.listLatest.useQuery({ limit: 10 })
+    const { data: userListData, isLoading: userListIsLoading } = trpc.user.listLatest.useQuery({ limit: 50 })
 
-    const [show, setShow] = useState(false)
     const parent = useRef(null)
 
     useEffect(() => {
