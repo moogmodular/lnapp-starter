@@ -33,25 +33,24 @@ export async function encrypt(privateKey: string, pubkey: string, text: string):
     return `${ctb64}?iv=${ivb64}`
 }
 
-const getConnectedRelay = async () => {
+const getConnectedRelays = async () => {
     const envRelays = JSON.parse(`${process.env.NOSTR_RELAY_POOL}`) as string[]
 
-    const connectedRelay = (await new Promise((resolve) => {
+    const relays = await Promise.all(
         envRelays.map(async (relay) => {
             const relayInstance = relayInit(relay)
             await relayInstance.connect()
-            if (getRelayStatus(relayInstance) === 1) {
-                resolve(relayInstance)
-            }
-        })
-    })) as Relay
-    return connectedRelay
+            return relayInstance
+        }),
+    )
+
+    return relays.filter((relay) => getRelayStatus(relay) === 1)
 }
 
 export const sendDMToWebsiteAccount = async (msg: string) => {
     const publicKey = getPublicKey(`${process.env.WEBSITE_PRIVATE_NOSTR_KEY}`)
 
-    const connectedRelay = await getConnectedRelay()
+    const connectedRelay = await getConnectedRelays()
 
     const ciphertext = await encrypt(
         `${process.env.WEBSITE_PRIVATE_NOSTR_KEY}`,
@@ -72,16 +71,18 @@ export const sendDMToWebsiteAccount = async (msg: string) => {
     event.id = getEventHash(event)
     event.sig = await signEvent(event, `${process.env.WEBSITE_PRIVATE_NOSTR_KEY}`)
 
-    const pub = await connectedRelay.publish(event)
-
-    pub.on('ok', () => {
-        console.log('ok', msg)
-    })
-    pub.on('failed', (err: any) => {
-        console.log('failed', err)
-    })
-
-    connectedRelay.close()
+    await Promise.all(
+        connectedRelay.map((relay) => {
+            const pub = relay.publish(event)
+            pub.on('ok', () => {
+                console.log('ok', msg)
+            })
+            pub.on('failed', (err: any) => {
+                console.log('failed', err)
+            })
+            relay.close()
+        }),
+    )
 
     return
 }
@@ -89,7 +90,7 @@ export const sendDMToWebsiteAccount = async (msg: string) => {
 export const sendDMToUser = async (recipientPubKey: string, msg: string) => {
     const publicKey = getPublicKey(`${process.env.WEBSITE_PRIVATE_NOSTR_KEY}`)
 
-    const connectedRelay = await getConnectedRelay()
+    const connectedRelay = await getConnectedRelays()
 
     const ciphertext = await encrypt(`${process.env.WEBSITE_PRIVATE_NOSTR_KEY}`, recipientPubKey, msg)
 
@@ -106,16 +107,18 @@ export const sendDMToUser = async (recipientPubKey: string, msg: string) => {
     event.id = getEventHash(event)
     event.sig = await signEvent(event, `${process.env.WEBSITE_PRIVATE_NOSTR_KEY}`)
 
-    const pub = await connectedRelay.publish(event)
-
-    pub.on('ok', () => {
-        console.log('ok', msg)
-    })
-    pub.on('failed', (err: any) => {
-        console.log('failed', err)
-    })
-
-    connectedRelay.close()
+    await Promise.all(
+        connectedRelay.map((relay) => {
+            const pub = relay.publish(event)
+            pub.on('ok', () => {
+                console.log('ok', msg)
+            })
+            pub.on('failed', (err: any) => {
+                console.log('failed', err)
+            })
+            relay.close()
+        }),
+    )
 
     return
 }
