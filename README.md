@@ -21,6 +21,7 @@ Happy Hacking!
 -   🪙 simple bloatless auth with [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 -   🏢 state management [zustand](https://github.com/pmndrs/zustand)
 -   🌬️ easy to use styling with [tailwind](https://tailwindcss.com/)
+-   🏗️️ UI components with [MUI](https://mui.com/)
 -   🔮 REST endpoints with [trpc-openapi](https://github.com/jlalmes/trpc-openapi)
 -   🎭 e2e testing with [Playwright](https://playwright.dev/)
 -   🖊️ form handling with [react-hook-form](https://react-hook-form.com/)
