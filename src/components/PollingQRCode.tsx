@@ -1,8 +1,8 @@
 import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
-import { Spinner } from '~/components/Spinner'
 import { requestProvider } from 'webln'
+import { CircularProgress } from '@mui/material'
 
 interface PollingQRCodeProps {
     bolt11: string
@@ -14,6 +14,7 @@ export const PollingQRCode = ({ bolt11 }: PollingQRCodeProps) => {
     const [parent] = useAutoAnimate<HTMLDivElement>()
 
     const handleUrlStringClick = async () => {
+        // TODO: Fix clipboard write
         // await navigator.clipboard.writeText(bolt11)
         setShowCopied(true)
         setTimeout(() => {
@@ -44,7 +45,7 @@ export const PollingQRCode = ({ bolt11 }: PollingQRCodeProps) => {
     return (
         <div ref={parent} className={'flex flex-col items-center justify-center gap-8'}>
             <QRCodeSVG value={bolt11} level={'Q'} size={250} />
-            <Spinner />
+            <CircularProgress />
             <div id={'bolt11-text'} className={'max-w-3xl break-all text-center'} onClick={handleUrlStringClick}>
                 {bolt11}
             </div>

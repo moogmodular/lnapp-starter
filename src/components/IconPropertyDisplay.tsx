@@ -1,4 +1,3 @@
-import { trpc } from '~/utils/trpc'
 import { ReactNode } from 'react'
 
 interface IconPropertyDisplayProps {

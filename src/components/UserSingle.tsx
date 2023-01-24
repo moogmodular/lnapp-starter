@@ -1,12 +1,12 @@
 import { inferProcedureOutput } from '@trpc/server'
 import { AppRouter } from '~/server/routers/_app'
-import { PublicKeyDisplay } from '~/components/PublicKeyDisplay'
 import { format } from 'date-fns'
 import { standardDateDayFormat, standardDateNumberDayFormat } from '~/utils/date'
 import { z } from 'zod'
 import { useZodForm } from '~/utils/useZodForm'
 import { trpc } from '~/utils/trpc'
-import { tipRouter } from '~/server/routers/tips'
+import { Button, TextField } from '@mui/material'
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
 
 type UserSingleOutput = inferProcedureOutput<AppRouter['user']['listLatest']>[0]
 
@@ -85,7 +85,7 @@ export const UserSingle = ({ user }: UserSingleProps) => {
                         <p id={'user-bio-display'}>{user.bio}</p>
                     </div>
                 </div>
-                <div className={'flex flex-row'}>
+                <div className={'flex flex-row items-center'}>
                     <img
                         className="mr-2 h-14 w-14"
                         src={user.profileImage ?? 'https://picsum.photos/250'}
@@ -102,39 +102,26 @@ export const UserSingle = ({ user }: UserSingleProps) => {
                         </div>
                     </div>
                     <div className={'flex flex-row gap-4'}>
-                        <div>
-                            <label htmlFor="tip-this-user">tip amount</label>
-                            <input
-                                id={'tip-this-user'}
-                                {...register('amount', { required: true, valueAsNumber: true })}
-                                type="text"
-                                className="
-          form-control
-          m-0
-          block
-          w-full
-          border
-          border-solid
-          border-gray-300
-          bg-white bg-clip-padding
-          px-2 py-1 text-sm
-          font-normal
-          text-gray-700
-          transition
-          ease-in-out
-          focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none
-        "
-                            />
-                        </div>
-                        <button
-                            className={
-                                'h-12 w-32 rounded-tr-lg border-2 border-gray-400 p-3 text-sm transition duration-150 ease-in-out hover:-translate-y-1 hover:drop-shadow-lg'
-                            }
+                        <TextField
+                            label="tip amount"
+                            id="transact-invoice-amount-input"
+                            type={'number'}
+                            size={'small'}
+                            {...register('amount', { required: true, valueAsNumber: true })}
+                        />
+                        <Button
+                            id={'edit-profile-delete-user'}
+                            fullWidth={true}
+                            component="label"
+                            variant="contained"
+                            size={'small'}
+                            color={'success'}
                             onClick={() => handleCreateTip()}
                             disabled={watch('amount') < 1 || watch('amount') > 100}
+                            startIcon={<RocketLaunchIcon />}
                         >
                             Tip user
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>

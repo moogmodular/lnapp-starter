@@ -1,13 +1,5 @@
-import { inferProcedureOutput } from '@trpc/server'
-import { AppRouter } from '~/server/routers/_app'
 import { trpc } from '~/utils/trpc'
-import useAuthStore from '~/store/useAuthStore'
-import { useEffect, useState } from 'react'
-import { QRCodeSVG } from 'qrcode.react'
-import { useForm } from 'react-hook-form'
 import { PollingQRCode } from '~/components/PollingQRCode'
-
-type LoginUrlResponse = inferProcedureOutput<AppRouter['auth']['loginUrl']>
 
 interface DepositProps {
     done: () => void
