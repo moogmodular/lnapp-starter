@@ -4,7 +4,7 @@ import { IconPropertyDisplay } from '~/components/IconPropertyDisplay'
 import autoAnimate from '@formkit/auto-animate'
 import { format } from 'date-fns'
 import { standardDateFormat } from '~/utils/date'
-import { Button } from '@mui/material'
+import { Avatar, Button, Tooltip } from '@mui/material'
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin'
 import BoltIcon from '@mui/icons-material/Bolt'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -37,20 +37,21 @@ export const Header = ({ openAuthenticate, openTransact, openEditUser }: HeaderP
             {user ? (
                 <div className={'flex flex-row justify-center justify-between gap-4'}>
                     {user.profileImage ? (
-                        <button onClick={openEditUser} id={'button-edit-profile'}>
-                            <img
-                                className="mr-2 h-10 w-10"
-                                src={user.profileImage}
+                        <Tooltip title={'edit user'}>
+                            <Avatar
+                                onClick={openEditUser}
+                                id={'button-edit-profile'}
                                 alt={`profile image of ${user.userName}`}
+                                src={user.profileImage}
                             />
-                        </button>
+                        </Tooltip>
                     ) : (
                         <AccountCircleIcon fontSize={'medium'} />
                     )}
 
-                    <div className={'grow'}>
+                    <div className={'grow text-xs lg:text-base'}>
                         <div>
-                            <IconPropertyDisplay identifier={'publicKey'} value={user.publicKey?.slice(0, 24) + '...'}>
+                            <IconPropertyDisplay identifier={'publicKey'} value={user.publicKey?.slice(0, 16) + '...'}>
                                 <FingerprintIcon fontSize={'small'} />
                             </IconPropertyDisplay>
                             <IconPropertyDisplay identifier={'userName'} value={'@' + user.userName}>
@@ -58,7 +59,7 @@ export const Header = ({ openAuthenticate, openTransact, openEditUser }: HeaderP
                             </IconPropertyDisplay>
                         </div>
                     </div>
-                    <div className={'grow'}>
+                    <div className={'hidden grow lg:block'}>
                         <IconPropertyDisplay identifier={'id'} value={user.id}>
                             <BadgeIcon fontSize={'small'} />
                         </IconPropertyDisplay>
@@ -70,31 +71,43 @@ export const Header = ({ openAuthenticate, openTransact, openEditUser }: HeaderP
                         </IconPropertyDisplay>
                     </div>
 
-                    <Button
-                        onMouseEnter={() => setBalanceHover(true)}
-                        onMouseLeave={() => setBalanceHover(false)}
-                        ref={parent}
-                        variant="contained"
-                        onClick={openTransact}
-                        id={'button-transact'}
-                        color="primary"
-                    >
-                        <CurrencyBitcoinIcon fontSize={'medium'} color={'warning'} />
-                        {balanceHover ? (
-                            <div>
-                                <p className={'text-xs'}>{user.balance}</p>
-                            </div>
-                        ) : null}
-                    </Button>
+                    <Tooltip title={'transactions & balance'}>
+                        <Button
+                            onMouseEnter={() => setBalanceHover(true)}
+                            onMouseLeave={() => setBalanceHover(false)}
+                            ref={parent}
+                            variant="contained"
+                            onClick={openTransact}
+                            id={'button-transact'}
+                            color="primary"
+                        >
+                            <CurrencyBitcoinIcon fontSize={'medium'} color={'warning'} />
+                            {balanceHover ? (
+                                <div>
+                                    <p className={'text-xs'}>{user.balance}</p>
+                                </div>
+                            ) : null}
+                        </Button>
+                    </Tooltip>
 
-                    <Button variant="contained" onClick={handleLogout} id={'logout-button'} color="primary">
-                        <BoltIcon fontSize={'medium'} color={'warning'} />
-                    </Button>
+                    <Tooltip title={'un-authenticate'}>
+                        <Button variant="contained" onClick={handleLogout} id={'logout-button'} color="primary">
+                            <BoltIcon fontSize={'medium'} color={'warning'} />
+                        </Button>
+                    </Tooltip>
                 </div>
             ) : (
-                <Button variant="contained" onClick={openAuthenticate} id={'open-authenticate-button'} color="primary">
-                    <BoltIcon fontSize={'medium'} />
-                </Button>
+                <Tooltip title={'authenticate'}>
+                    <Button
+                        variant="contained"
+                        onClick={openAuthenticate}
+                        id={'open-authenticate-button'}
+                        color="primary"
+                        className={'w-28 self-end'}
+                    >
+                        <BoltIcon fontSize={'medium'} color={'warning'} />
+                    </Button>
+                </Tooltip>
             )}
         </div>
     )

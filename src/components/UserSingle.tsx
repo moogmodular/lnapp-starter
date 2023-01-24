@@ -5,7 +5,7 @@ import { standardDateDayFormat, standardDateNumberDayFormat } from '~/utils/date
 import { z } from 'zod'
 import { useZodForm } from '~/utils/useZodForm'
 import { trpc } from '~/utils/trpc'
-import { Button, TextField } from '@mui/material'
+import { Avatar, Button, Divider, TextField } from '@mui/material'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
 
 type UserSingleOutput = inferProcedureOutput<AppRouter['user']['listLatest']>[0]
@@ -67,36 +67,45 @@ export const UserSingle = ({ user }: UserSingleProps) => {
                     'my-2 flex flex-col gap-4 rounded-tl-lg border-2 border-gray-400 p-3 text-sm transition duration-150 ease-in-out hover:-translate-y-1 hover:drop-shadow-lg'
                 }
             >
-                <div className={'flex flex-row gap-4'}>
+                <div className={'flex flex-row gap-4 text-xs lg:text-base'}>
                     <div className={'flex flex-col'}>
-                        <div className={'flex flex-row'}>
+                        <div className={'flex flex-row '}>
                             <b>Public Key:</b>
-                            <p>{user.publicKey}</p>
+                            <p className={'break-all'}>{user.publicKey}</p>
                         </div>
+                        <Divider />
+                        {user.bio && (
+                            <div>
+                                <div className={'flex flex-row'}>
+                                    <b>bio:</b>
+                                    <p id={'user-bio-display'}>{user.bio}</p>
+                                </div>
+                                <Divider />
+                            </div>
+                        )}
                         {user.nostrPubKey && (
-                            <div className={'flex flex-row'}>
-                                <b>Nostr:</b>
-                                <p>{user.nostrPubKey}</p>
+                            <div>
+                                <div className={'flex flex-row'}>
+                                    <b>Nostr:</b>
+                                    <p className={'break-all'}>{user.nostrPubKey}</p>
+                                </div>
+                                <Divider />
                             </div>
                         )}
                     </div>
-                    <div className={'flex w-1/3 flex-col'}>
-                        <b>bio:</b>
-                        <p id={'user-bio-display'}>{user.bio}</p>
-                    </div>
                 </div>
-                <div className={'flex flex-row items-center'}>
-                    <img
-                        className="mr-2 h-14 w-14"
-                        src={user.profileImage ?? 'https://picsum.photos/250'}
-                        alt={`profile image of ${user.userName}`}
-                    />
-                    <div className={'flex w-full flex-row gap-4'}>
-                        <div className={'flex w-1/3 flex-col'}>
+                <div className={'flex flex-col items-center gap-4 text-xs lg:flex-row lg:text-base'}>
+                    <div className={'flex w-full flex-row'}>
+                        <Avatar
+                            alt={`profile image of ${user.userName}`}
+                            src={user.profileImage ?? 'https://picsum.photos/250'}
+                            className={'mr-2'}
+                        />
+                        <div className={'flex w-1/3 grow flex-col text-xs lg:text-base'}>
                             <div>{user.id}</div>
                             <div>@{user.userName}</div>
                         </div>
-                        <div className={'flex flex-col'}>
+                        <div className={'hidden flex-col lg:flex'}>
                             <DateValue property={'created at:'} value={user.createdAt} />
                             <DateValue property={'updated at:'} value={user.updatedAt} />
                         </div>

@@ -31,7 +31,7 @@ const IndexPage: NextPageWithLayout = () => {
     }, [storeToken])
 
     return (
-        <div className="flex h-screen w-screen flex-col overflow-hidden px-8 lg:px-0">
+        <div className="flex h-screen w-screen flex-col overflow-hidden px-2">
             <div className="absolute inset-y-60  -z-10 h-4/5 overflow-hidden blur-xl">
                 <img src="/the_one_and_only_king.jpg" alt="The one and only king" className={'h-full w-full'} />
             </div>
