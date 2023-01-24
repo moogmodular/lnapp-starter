@@ -17,12 +17,12 @@ export const Footer = ({}) => {
                 </Link>
             </IconButton>
             <IconButton color="primary">
-                <Link href={'https://github.com/zerealschlauskwab/lnapp-starter'} rel={'noreferrer'} target={'_blank'}>
+                <Link href={'https://t.me/zeRealSchlausKwab'} rel={'noreferrer'} target={'_blank'}>
                     <TelegramIcon fontSize={'small'} />
                 </Link>
             </IconButton>
             <IconButton color="primary">
-                <Link href={'https://t.me/zeRealSchlausKwab'} rel={'noreferrer'} target={'_blank'}>
+                <Link href={'https://github.com/zerealschlauskwab/lnapp-starter'} rel={'noreferrer'} target={'_blank'}>
                     <GitHubIcon fontSize={'small'} />
                 </Link>
             </IconButton>
