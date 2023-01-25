@@ -1,6 +1,5 @@
 import { useZodForm } from '~/utils/useZodForm'
 import { z } from 'zod'
-import useAuthStore from '~/store/useAuthStore'
 import { AppRouter } from '~/server/routers/_app'
 import { inferProcedureInput } from '@trpc/server'
 import { trpc } from '~/utils/trpc'
@@ -10,6 +9,8 @@ import { TransactionList } from '~/components/TransactionList'
 import { Button, TextField } from '@mui/material'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import CheckIcon from '@mui/icons-material/Check'
+import { useStore } from 'zustand'
+import { authedUserStore } from '~/store/authedUserStore'
 
 type EditUserInput = inferProcedureInput<AppRouter['user']['edit']>
 
@@ -25,7 +26,7 @@ interface EditUserProps {
 }
 
 export const EditUser = ({ close }: EditUserProps) => {
-    const { user, logout, setStoreToken, setUser } = useAuthStore()
+    const { user, logout, setStoreToken, setUser } = useStore(authedUserStore)
     const [base64EncodedImage, setBase64EncodedImage] = useState<string | undefined>(user?.profileImage ?? undefined)
 
     const editUserMutation = trpc.user.edit.useMutation()

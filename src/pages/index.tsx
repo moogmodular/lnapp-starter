@@ -2,7 +2,6 @@ import { trpc } from '../utils/trpc'
 import { NextPageWithLayout } from './_app'
 import { useEffect, useState } from 'react'
 import { Header } from '~/components/Header'
-import useAuthStore from '~/store/useAuthStore'
 import { Authenticate } from '~/components/Authenticate'
 import { Transact } from '~/components/Transact'
 import { UserList } from '~/components/UserList'
@@ -10,9 +9,11 @@ import { Footer } from '~/components/Footer'
 import { InteractionModal } from '~/components/InteractionModal'
 import { EditUser } from '~/components/EditUser'
 import { WelcomeScreen } from '~/components/WelcomeScreen'
+import { useStore } from 'zustand'
+import { authedUserStore } from '~/store/authedUserStore'
 
 const IndexPage: NextPageWithLayout = () => {
-    const { user, setUser, storeToken, storeLogin } = useAuthStore()
+    const { user, setUser, storeToken, storeLogin } = useStore(authedUserStore)
     const [modal, setModal] = useState<'none' | 'authenticate' | 'transact' | 'editUser' | 'welcome'>('none')
 
     const utils = trpc.useContext()

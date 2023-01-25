@@ -3,7 +3,7 @@ import { createTRPCNext } from '@trpc/next'
 import { NextPageContext } from 'next'
 import superjson from 'superjson'
 import type { AppRouter } from '~/server/routers/_app'
-import authedUserStore from '~/store/authedUserStore'
+import { authedUserStore } from '~/store/authedUserStore'
 
 function getBaseUrl() {
     if (typeof window !== 'undefined') {

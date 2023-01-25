@@ -1,9 +1,10 @@
 import { inferProcedureOutput } from '@trpc/server'
 import { AppRouter } from '~/server/routers/_app'
 import { trpc } from '~/utils/trpc'
-import useAuthStore from '~/store/useAuthStore'
 import { useEffect, useState } from 'react'
 import { PollingQRCode } from '~/components/PollingQRCode'
+import { useStore } from 'zustand'
+import { authedUserStore } from '~/store/authedUserStore'
 
 type LoginUrlResponse = inferProcedureOutput<AppRouter['auth']['loginUrl']>
 
@@ -13,7 +14,7 @@ interface AuthenticateProps {
 
 export const Authenticate = ({ openWelcomeDialog }: AuthenticateProps) => {
     const utils = trpc.useContext()
-    const { storeToken, storeLogin } = useAuthStore()
+    const { storeToken, storeLogin } = useStore(authedUserStore)
 
     const [loginUrl, setLoginUrl] = useState<LoginUrlResponse>({ secret: '', encoded: '' })
     const [localStorageToken, setLocalstorageToken] = useState<string | null>()

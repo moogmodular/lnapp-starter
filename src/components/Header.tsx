@@ -1,4 +1,3 @@
-import useAuthStore from '~/store/useAuthStore'
 import { useEffect, useRef, useState } from 'react'
 import { IconPropertyDisplay } from '~/components/IconPropertyDisplay'
 import autoAnimate from '@formkit/auto-animate'
@@ -11,6 +10,8 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FingerprintIcon from '@mui/icons-material/Fingerprint'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import BadgeIcon from '@mui/icons-material/Badge'
+import { useStore } from 'zustand'
+import { authedUserStore } from '~/store/authedUserStore'
 
 interface HeaderProps {
     openAuthenticate: () => void
@@ -20,7 +21,7 @@ interface HeaderProps {
 
 export const Header = ({ openAuthenticate, openTransact, openEditUser }: HeaderProps) => {
     const [balanceHover, setBalanceHover] = useState(false)
-    const { user, logout } = useAuthStore()
+    const { user, logout } = useStore(authedUserStore)
 
     const parent = useRef(null)
 

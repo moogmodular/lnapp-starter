@@ -1,11 +1,12 @@
-import useAuthStore from '~/store/useAuthStore'
+import { useStore } from 'zustand'
+import { authedUserStore } from '~/store/authedUserStore'
 
 interface WelcomeScreenProps {
     close: () => void
 }
 
 export const WelcomeScreen = ({}: WelcomeScreenProps) => {
-    const { user } = useAuthStore()
+    const { user } = useStore(authedUserStore)
 
     return (
         <div>
