@@ -103,7 +103,7 @@ yarn test:e2e   # runs e2e tests
 
 ---
 
-`zeRealSchlausKwab@stacker.news`
+Help this project with [geyser.fund](https://geyser.fund/project/lnappstartersfossdevelopment) or `zeRealSchlausKwab@stacker.news`.
 
 ![zeRealSchlausKwab@stacker.news](./public/img.png)
 
