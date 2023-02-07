@@ -35,10 +35,10 @@ export const tipRouter = t.router({
             })
 
             if (targetUser.nostrPubKey) {
-                void sendDMToUser(
-                    targetUser.nostrPubKey,
-                    `@${targetUser.userName}. You have received a tip of ${input.amount} on ${process.env.DOMAIN}.`,
-                )
+                // void sendDMToUser(
+                //     targetUser.nostrPubKey,
+                //     `@${targetUser.userName}. You have received a tip of ${input.amount} on ${process.env.DOMAIN}.`,
+                // )
             }
 
             return { status: 'OK' }

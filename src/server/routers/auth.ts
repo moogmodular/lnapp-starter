@@ -122,11 +122,11 @@ export const authRouter = t.router({
                                 profileImage: `data:image/png;base64,${image}`,
                             },
                         })
-                        void sendDMToWebsiteAccount(
-                            `A new user called ${innerUser.userName} has been created on ${
-                                process.env.DOMAIN
-                            }. Creation time ${format(innerUser.createdAt, standardDateFormat)}`,
-                        )
+                        // void sendDMToWebsiteAccount(
+                        //     `A new user called ${innerUser.userName} has been created on ${
+                        //         process.env.DOMAIN
+                        //     }. Creation time ${format(innerUser.createdAt, standardDateFormat)}`,
+                        // )
                     } else {
                         await transactionPrisma.user.update({
                             where: { id: innerUser.id },
