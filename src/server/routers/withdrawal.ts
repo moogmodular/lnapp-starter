@@ -11,6 +11,9 @@ import { isAuthed } from '~/server/middlewares/authed'
 
 export const withdrawalRouter = t.router({
     getWithdrawalUrl: t.procedure.use(isAuthed).query(async ({ ctx }) => {
+        if (await recentSettledTransaction(prisma, ctx.user.id, 'WITHDRAWAL')) {
+            throw new TRPCError({ code: 'FORBIDDEN', message: 'last withdrawal too recent' })
+        }
         const secret = k1()
         const currentBalance = await userBalance(prisma, ctx.user.id)
         const maxAmount = Math.min(currentBalance, SINGLE_TRANSACTION_CAP)
